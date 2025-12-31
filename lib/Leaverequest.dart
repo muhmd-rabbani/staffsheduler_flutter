@@ -26,10 +26,20 @@ class _LeaverequestState extends State<Leaverequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
+
+      // ✅ APP BAR WITH BACK BUTTON
       appBar: AppBar(
         backgroundColor: backgroundColor,
         elevation: 0,
-        iconTheme: const IconThemeData(color: primaryColor),
+
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          color: primaryColor,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+
         title: const Text(
           "Leave Request",
           style: TextStyle(
@@ -39,12 +49,12 @@ class _LeaverequestState extends State<Leaverequest> {
         ),
         centerTitle: true,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             _label("Select Leave Type *"),
             _leaveDropdown(),
 
@@ -146,7 +156,9 @@ class _LeaverequestState extends State<Leaverequest> {
             DropdownMenuItem(value: "Casual Leave", child: Text("Casual Leave")),
             DropdownMenuItem(value: "Sick Leave", child: Text("Sick Leave")),
             DropdownMenuItem(value: "Earned Leave", child: Text("Earned Leave")),
-            DropdownMenuItem(value: "Emergency Leave", child: Text("Emergency Leave")),
+            DropdownMenuItem(
+                value: "Emergency Leave",
+                child: Text("Emergency Leave")),
           ],
           onChanged: (value) {
             setState(() {
@@ -221,3 +233,4 @@ class _LeaverequestState extends State<Leaverequest> {
     }
   }
 }
+

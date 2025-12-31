@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:staffscheduler/Complaint.dart';
+import 'package:staffscheduler/Leaverequest.dart';
+import 'package:staffscheduler/Upcomingshifts.dart';
+import 'package:staffscheduler/department.dart';
+import 'package:staffscheduler/attendance.dart';
+import 'package:staffscheduler/Complaint.dart';
+import 'package:staffscheduler/notification.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -7,19 +14,18 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      bottomNavigationBar: _bottomNav(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _header(),
+                _header(context),
                 const SizedBox(height: 16),
-                _upcomingShiftCard(),
-                const SizedBox(height: 16),
-                _gridCards(),
+                _upcomingShiftCard(context),
+                const SizedBox(height: 20),
+                _listCards(context),
               ],
             ),
           ),
@@ -29,46 +35,50 @@ class Dashboard extends StatelessWidget {
   }
 
   // 🔹 Header
-  Widget _header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Good Morning,",
-                style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 4),
-            Text(
-              " ",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        Stack(
-          children: [
-            const Icon(Icons.notifications, size: 28),
-            Positioned(
-              right: 0,
-              child: CircleAvatar(
-                radius: 6,
-                backgroundColor: Colors.red,
-                child: const Text(
-                  "1",
-                  style: TextStyle(fontSize: 8, color: Colors.white),
-                ),
+  Widget _header(context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.badge, size: 36, color: Colors.blue),
+              SizedBox(width: 10),
+              Text(
+                "StaffScheduler",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            )
-          ],
-        )
-      ],
+            ],
+          ),
+          Stack(
+            children:  [
+              IconButton(icon: Icon(Icons.notifications, size: 28),onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Notification1(),));
+              },),
+              // Positioned(
+              //   right: 0,
+              //   child: CircleAvatar(
+              //     radius: 6,
+              //     backgroundColor: Colors.red,
+              //     child: Text(
+              //       "1",
+              //       style: TextStyle(fontSize: 8, color: Colors.white),
+              //     ),
+              //   ),
+              // )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   // 🔹 Upcoming Shift Card
-  Widget _upcomingShiftCard() {
+  Widget _upcomingShiftCard(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFB3D9FF), Color(0xFF6FB1FC)],
@@ -81,83 +91,40 @@ class Dashboard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Upcoming Shift",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                const SizedBox(height: 8),
+                const Text(
+                  "Upcoming Shift",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 10),
                 const Text("Tue, Apr 25 | 9:00 AM - 5:00 PM"),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 const Text("IT Department"),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Upcomingshifts(),
+                      ),
+                    );
+                  },
                   child: const Text("View Shift"),
-                )
+                ),
               ],
             ),
           ),
+          const SizedBox(width: 16),
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.qr_code, size: 50),
-          )
-        ],
-      ),
-    );
-  }
-
-  // 🔹 Grid Cards
-  Widget _gridCards() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      children: [
-        _card("Departments", Icons.apartment, "View assigned departments"),
-        _card("Departments", Icons.apartment, "2 Pending", highlight: true),
-        _card("Complaints", Icons.report, "1 New Reply", alert: true),
-        _card("Leave Request", Icons.event, "2 Pending\n28 Working Days"),
-        _card("Complaints", Icons.report, "Send complaint", alert: true),
-        _card("Attendance", Icons.check_circle, "Today: Present (5)"),
-      ],
-    );
-  }
-
-  Widget _card(String title, IconData icon, String subtitle,
-      {bool alert = false, bool highlight = false}) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon,
-              color: alert
-                  ? Colors.red
-                  : highlight
-                      ? Colors.green
-                      : Colors.blue),
-          const SizedBox(height: 12),
-          Text(title,
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 6),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: alert
-                  ? Colors.red
-                  : highlight
-                      ? Colors.green
-                      : Colors.grey,
+            child: const Icon(
+              Icons.calendar_today,
+              size: 34,
+              color: Colors.blue,
             ),
           ),
         ],
@@ -165,19 +132,101 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  // 🔹 Bottom Navigation
-  Widget _bottomNav() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.blue,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: "Shifts"),
-        BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: ""),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.notifications), label: "Notifications"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+  // 🔹 List Cards with Navigation
+  Widget _listCards(BuildContext context) {
+    return Column(
+      children: [
+        _listCard(
+          title: "Department",
+          icon: Icons.apartment,
+          subtitle: "View your department",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Department()),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        _listCard(
+          title: "Complaints",
+          icon: Icons.report,
+          subtitle: "View & raise complaints",
+          alert: true,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Complaint()),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        _listCard(
+          title: "Leave Request",
+          icon: Icons.event,
+          subtitle: "Apply & view leave status",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Leaverequest()),
+            );
+          },
+        ),
       ],
     );
   }
+
+  Widget _listCard({
+    required String title,
+    required IconData icon,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool alert = false,
+  }) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 28),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 30,
+              color: alert ? Colors.red : Colors.blue,
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: alert ? Colors.red : Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
 }
+
