@@ -11,7 +11,7 @@ class _LeaverequestState extends State<Leaverequest> {
   // 🎨 Colors
   static const primaryColor = Color(0xFF334155);
   static const backgroundColor = Color(0xFFF8FAFC);
-  static const accentColor = Color(0xFF2563EB);
+  static const accentColor = Color(0xFF00346B);
   static const textColor = Color(0xFF0F172A);
 
   // 🔽 State variables
@@ -80,7 +80,7 @@ class _LeaverequestState extends State<Leaverequest> {
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text(
-                "Apply as Half Day",
+                "Emergency Leave",
                 style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.w500,
